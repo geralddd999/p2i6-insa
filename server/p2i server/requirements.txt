@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+aiofiles
+python-multipart
+pydantic
+requests
+python-dotenv
+pandas

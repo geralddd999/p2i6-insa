@@ -1,0 +1,1 @@
+cmd.exe /k .\venv\Scripts\deactivate.bat
