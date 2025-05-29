@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Last 3-day Summary</h1>
+<p>Total insects: {{ summary.insects }}</p>
+<h2>Averages</h2>
+<ul>
+  {% for k, v in summary.averages.items() %}
+     <li>{{ k }}: {{ '%.2f'|format(v) }}</li>
+  {% endfor %}
+</ul>
+{% endblock %}

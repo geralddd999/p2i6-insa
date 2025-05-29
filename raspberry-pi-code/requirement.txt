@@ -1,0 +1,5 @@
+
+pyserial            # Arduino serial
+opencv-python       # Computer‑vision + VIDEOIO (use opencv-python-headless if no GUI)
+requests 
+# picamera2        # <apt install python3-picamera2> only if you disable the legacy camera overlay
