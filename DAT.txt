@@ -31,7 +31,7 @@ Front-end
         HTML + CSS basiqueDocument d’Architecture Technique (DAT)
 
 
-2.Client (Raspberry Pi model B)
+2.Client (Raspberry Pi 2 model B)
 
     un Raspberry déja reglé
 
