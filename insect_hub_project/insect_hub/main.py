@@ -22,7 +22,7 @@ app.mount("/static", StaticFiles(directory=str(Path(__file__).parent / "static")
 
 @app.post("/api/upload", dependencies=[Depends(verify_token)])
 async def upload(
-    csv: UploadFile = File(...),
+    csv: UploadFile | None = File(None),
     images: list[UploadFile] = File(default=[]),
     health: str | None = Form(None),
     error: str | None = Form(None),
@@ -31,12 +31,15 @@ async def upload(
     day = _dt.date.today().isoformat()
     day_dir = ensure_day_dirs(DATA_DIR, day)
 
-    csv_dst = day_dir / "csv" / csv.filename
-    async with aiofiles.open(csv_dst, "wb") as out:
-        while chunk := await csv.read(1024 * 1024):
-            await out.write(chunk)
+    csv_path = ""
+    if csv is not None:
+        csv_dst = day_dir / "csv" / csv.filename
+        async with aiofiles.open(csv_dst, "wb") as out:
+            while chunk := await csv.read(1024 * 1024):
+                await out.write(chunk)
+        csv_path = str(csv_dst)
 
-    upload_id = insert_upload(db, day, str(csv_dst))
+    upload_id = insert_upload(db, day, csv_path)
 
     for img in images:
         img_dst = day_dir / "img" / img.filename
@@ -55,6 +58,8 @@ async def upload(
             insert_error(db, upload_id, json.loads(error))
         except json.JSONDecodeError:
             pass
+    if csv is None and not images:
+        raise HTTPException(400, "upload must contain csv and/or images")
 
     db.commit()
     return {"ack": True}
