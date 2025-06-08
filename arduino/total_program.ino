@@ -9,10 +9,10 @@ Encoder myEnc(2, 3);                   // Encoder on pins 2 & 3
 byte I2C_ADDRESS = 0x0f;
 
 // ------------------- PI Control Parameters -------------------
-float kp = 5.0;
-float ki = 0.05;
-long consigne = 360;
-long degree_step = 45;
+float kp = 50;
+float ki = 0.5;
+long consigne = 0;
+long degree_step = -5;
 unsigned long motor_interval = 10000;
 
 long lastMotorUpdate = 0;
@@ -64,10 +64,10 @@ void setup() {
   Serial.println("Motor is rotating... Press button to activate control + sensors");
 
   // Start rotating motor (open loop)
-  Motor.speed(MOTOR_CHANNEL, 50); // Arbitrary speed
+  Motor.speed(MOTOR_CHANNEL, -150); // Arbitrary speed
 
   // Wait for button press (goes LOW)
-  while (digitalRead(switchPin) == HIGH) {
+  while (digitalRead(switchPin) == LOW) {
     delay(10);
   }
 
@@ -75,6 +75,7 @@ void setup() {
 
   // Stop open-loop motor, reset encoder
   Motor.stop(MOTOR_CHANNEL);
+  delay(1000);
   myEnc.write(0);
 
   delay(200);  // Debounce delay
@@ -98,7 +99,11 @@ void loop() {
 
     commande = kp * erreur + accumulator;
     commande = constrain(commande, -255, 255);
-
+    Serial.print("Time: "); Serial.print(currentTime);
+    Serial.print(" ms ; Position: "); Serial.print(position);
+    Serial.print(" ; Error: "); Serial.print(erreur);
+    Serial.print(" ; Command: "); Serial.print(commande);
+    Serial.print(" ; Consigne: "); Serial.println(consigne);
     Motor.speed(MOTOR_CHANNEL, commande);
 
     if (currentTime - lastMotorUpdate >= motor_interval) {
