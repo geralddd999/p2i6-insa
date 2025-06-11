@@ -18,7 +18,7 @@ DATA_DIR = Path("data")
 init_db()
 
 app = FastAPI(title="Insect Hub",
-              root_path=os.getenv("ROOT_PATH", "/allinone"))
+              root_path=os.getenv("ROOT_PATH", "/allinon"))
 
 templates = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
 app.mount("/static", StaticFiles(directory=str(Path(__file__).parent / "static")), name="static")
