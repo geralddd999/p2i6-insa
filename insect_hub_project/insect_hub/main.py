@@ -5,7 +5,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import StreamingResponse
 from pathlib import Path
 import shutil, aiofiles, datetime as _dt, json, typing as _t
-from .auth import verify_token
+from .auth import verify_token, API_TOKEN
 from .database import init_db, get_db, insert_upload, insert_photo, insert_health, insert_error, insert_log
 from .utils import ensure_day_dirs, stats_last_3_days, build_tree, monthly_recap, build_nested_tree
 import sqlite3
@@ -129,7 +129,7 @@ async def root(request: Request):
 @app.get("/data", response_class=HTMLResponse)
 async def data_view(request: Request):
     tree  = build_nested_tree(DATA_DIR)
-    token = os.getenv("API_TOKEN", "secret-token")   # server’s current token
+    token = os.getenv("API_TOKEN", "very-secret-and-difficult-token")   # server’s current token
     return templates.TemplateResponse(
         "data_tree.html",
         {"request": request, "tree": tree, "token": token},
