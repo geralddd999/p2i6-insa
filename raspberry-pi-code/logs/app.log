@@ -34308,3 +34308,85 @@ Traceback (most recent call last):
         'device reports readiness to read but returned no data '
         '(device disconnected or multiple access on port?)')
 serial.serialutil.SerialException: device reports readiness to read but returned no data (device disconnected or multiple access on port?)
+2025-06-04 15:05:20,404 [INFO] picamera2.picamera2: Initialization successful.
+2025-06-04 15:05:20,407 [INFO] picamera2.picamera2: Camera now open.
+2025-06-04 15:05:20,443 [INFO] picamera2.picamera2: Configuration successful!
+2025-06-04 15:05:20,593 [INFO] picamera2.picamera2: Camera started
+2025-06-04 15:05:20,615 [INFO] camera_detect: Camera initialised
+2025-06-04 15:05:22,358 [ERROR] camera_detect: imwrite failed
+2025-06-04 15:05:22,542 [ERROR] camera_detect: imwrite failed
+2025-06-04 15:05:35,167 [ERROR] camera_detect: imwrite failed
+2025-06-04 15:05:35,314 [ERROR] camera_detect: imwrite failed
+2025-06-04 15:05:35,474 [ERROR] camera_detect: imwrite failed
+2025-06-04 15:05:38,220 [ERROR] camera_detect: imwrite failed
+2025-06-04 15:05:38,483 [ERROR] camera_detect: imwrite failed
+2025-06-04 15:05:38,955 [ERROR] camera_detect: imwrite failed
+2025-06-04 15:05:39,211 [ERROR] camera_detect: imwrite failed
+2025-06-04 15:05:39,468 [ERROR] camera_detect: imwrite failed
+2025-06-04 15:05:39,622 [ERROR] camera_detect: imwrite failed
+2025-06-04 15:05:50,229 [ERROR] camera_detect: imwrite failed
+2025-06-04 15:06:12,231 [ERROR] camera_detect: imwrite failed
+2025-06-04 15:06:12,376 [ERROR] camera_detect: imwrite failed
+2025-06-04 15:06:15,773 [ERROR] camera_detect: imwrite failed
+2025-06-04 15:06:22,888 [ERROR] camera_detect: imwrite failed
+2025-06-04 15:06:41,039 [ERROR] camera_detect: imwrite failed
+2025-06-04 15:06:41,178 [ERROR] camera_detect: imwrite failed
+2025-06-04 15:06:48,834 [ERROR] camera_detect: imwrite failed
+2025-06-04 15:06:49,008 [ERROR] camera_detect: imwrite failed
+2025-06-04 15:06:49,154 [ERROR] camera_detect: imwrite failed
+2025-06-04 15:06:49,303 [ERROR] camera_detect: imwrite failed
+2025-06-04 15:06:57,213 [ERROR] camera_detect: imwrite failed
+2025-06-04 15:06:57,351 [ERROR] camera_detect: imwrite failed
+2025-06-04 15:06:57,499 [ERROR] camera_detect: imwrite failed
+2025-06-04 15:08:07,620 [ERROR] camera_detect: imwrite failed
+2025-06-04 15:08:07,756 [ERROR] camera_detect: imwrite failed
+2025-06-04 15:08:07,893 [ERROR] camera_detect: imwrite failed
+2025-06-04 15:08:09,358 [ERROR] camera_detect: imwrite failed
+2025-06-04 15:08:09,402 [INFO] picamera2.picamera2: Camera stopped
+2025-06-04 15:08:09,609 [INFO] picamera2.picamera2: Camera closed successfully.
+2025-06-04 15:38:31,363 [INFO] picamera2.picamera2: Initialization successful.
+2025-06-04 15:38:31,365 [INFO] picamera2.picamera2: Camera now open.
+2025-06-04 15:38:31,405 [INFO] picamera2.picamera2: Configuration successful!
+2025-06-04 15:38:31,594 [INFO] picamera2.picamera2: Camera started
+2025-06-04 15:38:36,632 [INFO] camera_detect: Camera initialised
+2025-06-04 15:40:51,072 [INFO] picamera2.picamera2: Camera stopped
+2025-06-04 15:40:51,283 [INFO] picamera2.picamera2: Camera closed successfully.
+2025-06-04 15:41:36,641 [INFO] picamera2.picamera2: Initialization successful.
+2025-06-04 15:41:36,643 [INFO] picamera2.picamera2: Camera now open.
+2025-06-04 15:41:36,682 [INFO] picamera2.picamera2: Configuration successful!
+2025-06-04 15:41:36,845 [INFO] picamera2.picamera2: Camera started
+2025-06-04 15:41:42,145 [INFO] camera_detect: Camera initialised
+2025-06-04 15:46:42,246 [ERROR] sender: Network error: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /api/upload (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x51555c50>: Failed to establish a new connection: [Errno 111] Connection refused'))
+2025-06-04 15:47:58,332 [INFO] picamera2.picamera2: Camera stopped
+2025-06-04 15:47:58,551 [INFO] picamera2.picamera2: Camera closed successfully.
+2025-06-04 16:09:07,220 [INFO] picamera2.picamera2: Initialization successful.
+2025-06-04 16:09:07,238 [INFO] picamera2.picamera2: Camera now open.
+2025-06-04 16:09:07,289 [INFO] picamera2.picamera2: Configuration successful!
+2025-06-04 16:09:07,541 [INFO] picamera2.picamera2: Camera started
+2025-06-04 16:09:12,988 [INFO] camera_detect: Camera initialised
+2025-06-04 16:14:13,847 [INFO] sender: POST http://100.71.142.12:8000/api/upload → 200
+2025-06-04 16:14:13,865 [INFO] sender: Uploaded & purged arduino_2025-05-27.csv (+0 images)
+2025-06-04 17:10:46,977 [INFO] picamera2.picamera2: Camera stopped
+2025-06-04 17:10:47,488 [INFO] picamera2.picamera2: Camera closed successfully.
+2025-06-04 17:11:32,401 [INFO] picamera2.picamera2: Initialization successful.
+2025-06-04 17:11:32,403 [INFO] picamera2.picamera2: Camera now open.
+2025-06-04 17:11:32,441 [INFO] picamera2.picamera2: Configuration successful!
+2025-06-04 17:11:32,614 [INFO] picamera2.picamera2: Camera started
+2025-06-04 17:11:37,965 [INFO] camera_detect: Camera initialised
+2025-06-04 17:16:41,060 [INFO] sender: POST http://100.71.142.12:8000/api/upload → 422
+2025-06-04 17:16:41,065 [ERROR] sender: server rejected upload 422 {"detail":[{"type":"missing","loc":["body","csv"],"msg":"Field required","input":null}]}
+2025-06-04 17:26:59,457 [INFO] sender: POST http://100.71.142.12:8000/api/upload → 422
+2025-06-04 17:26:59,464 [ERROR] sender: server rejected upload 422 {"detail":[{"type":"missing","loc":["body","csv"],"msg":"Field required","input":null}]}
+2025-06-04 17:37:19,474 [INFO] sender: POST http://100.71.142.12:8000/api/upload → 422
+2025-06-04 17:37:19,483 [ERROR] sender: server rejected upload 422 {"detail":[{"type":"missing","loc":["body","csv"],"msg":"Field required","input":null}]}
+2025-06-04 17:47:39,835 [INFO] sender: POST http://100.71.142.12:8000/api/upload → 200
+2025-06-04 17:47:39,970 [ERROR] sender: unexpected error in upload cycle, retrying
+Traceback (most recent call last):
+  File "/home/perry/raspberry-pi-code/sender.py", line 94, in run
+    self.upload_cycle()
+  File "/home/perry/raspberry-pi-code/sender.py", line 84, in upload_cycle
+    logger.info("Uploaded & purged %s independant (+%d images)", csv_path.name, len(images))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'csv_path' where it is not associated with a value
+2025-06-04 17:52:00,216 [INFO] picamera2.picamera2: Camera stopped
+2025-06-04 17:52:00,439 [INFO] picamera2.picamera2: Camera closed successfully.

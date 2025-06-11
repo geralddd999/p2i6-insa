@@ -1,11 +1,11 @@
 import threading, logging, time
 from datetime import datetime
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 import requests 
 
-from config import AUTH_TOKEN, DATA_DIR, IMG_DIR, SERVER_URL, TCP_RETRY_DELAY, UPLOAD_INTERVAL, INITIAL_UPLOAD_WAIT_PERIOD
+from config import AUTH_TOKEN, DATA_DIR, IMG_DIR, SERVER_URL, TCP_RETRY_DELAY, UPLOAD_INTERVAL, INITIAL_UPLOAD_WAIT_PERIOD, LOG_FILE
 
 logger = logging.getLogger(__name__)
 
@@ -18,6 +18,8 @@ def timestamp_from_name(path : Path) -> datetime:
     
 
 class Uploader(threading.Thread):
+    LOG_MIN_SIZE = 1024
+    
     def __init__(self, stop_event: threading.Event):
         super().__init__(daemon = True)
         self.stop_event = stop_event
@@ -30,39 +32,84 @@ class Uploader(threading.Thread):
     def image_finder_b4range(cutoff : datetime) -> List[Path]:
         return([img for img in IMG_DIR.glob("*.jpg") if timestamp_from_name(img) <= cutoff])
     
-    def sender(self, csv_path: Path, images : List[Path]) -> bool:
-        files = [("csv", (csv_path.name, csv_path.open('rb'), "text/csv"))]
+    @staticmethod
+    def image_finder() -> List[Path]:
+        return(sorted(IMG_DIR.glob("*.jpg")))
+
+    def sender(self, csv_path: Optional[Path], images : List[Path]) -> bool:
+        files = []
+        #files = [("csv", (csv_path.name, csv_path.open('rb'), "text/csv"))]
+        if csv_path is not None:
+            files.append(("csv", (csv_path.name, csv_path.open('rb'), "text/csv")))
         for img in images:
             files.append(("images", (img.name, img.open("rb"), "image/jpeg")))
+
         headers = {"Authorization": f"Bearer {AUTH_TOKEN}"}
         
         try: 
-            resp = requests.post(SERVER_URL, files=files, headers=headers, timeout=30)
+            for h in logging.getLogger().handlers:
+                try:
+                    h.flush()
+                except Exception:
+                    pass
+            if LOG_FILE.exists() and LOG_FILE.stat().st_size >= self.LOG_MIN_SIZE:
+                files.append(("log", (LOG_FILE.name, LOG_FILE.open("rb"), "text/plain")))
+        except Exception as exc:
+            logger.warning("Could not attach log file: %s",exc)
+
+        if not files:
+            return True
+        
+        try:
+            resp = requests.post(
+                SERVER_URL,
+                files=files,
+                headers={"Authorization": f"Bearer {AUTH_TOKEN}"},
+                timeout=30,
+            )
             logger.info("POST %s → %d", SERVER_URL, resp.status_code)
             if resp.ok:
-                return True
-            logger.error("server rejected upload %d %s", resp.status_code, resp.text[:200])
+                # truncate log so only fresh lines go next time
+                try:
+                    LOG_FILE.touch(exist_ok=True)
+                    with LOG_FILE.open("w"):
+                        pass
 
+                except Exception as exc:
+                    logger.warning("Log-truncate failed: %s", exc)
+                return True
+            
+            logger.error("Server rejected upload: %d %s",
+                         resp.status_code, resp.text[:200])
         except requests.RequestException as exc:
             logger.error("Network error: %s", exc)
-        # Either network failure or non‑2xx → wait a bit then retry later
-        time.sleep(TCP_RETRY_DELAY)
+            time.sleep(TCP_RETRY_DELAY)        # back-off
         return False
+    
     def upload_cycle(self):
         csvs = self.csv_finder()
-        if not csvs:
-            return # we dont have nothing to send
         
-        csv_path = csvs[0]
-        
-        cutoff = timestamp_from_name(csv_path)
-        images = self.image_finder_b4range(cutoff)
+        if csvs:
+            csv_path = csvs[0]
+            cutoff = timestamp_from_name(csv_path)
+            images = self.image_finder_b4range(cutoff)
+            
+            if self.sender(csv_path,images):
+                csv_path.unlink(missing_ok=True)
+                for img in images:
+                    img.unlink(missing_ok=True)
+                logger.info("Uploaded and purged %s (+%d images)",csv_path.name, len(images))
+        #cutoff = timestamp_from_name(csv_path)
+        #images = self.image_finder_b4range(cutoff)
 
-        if self.sender(csv_path, images):
-            csv_path.unlink(missing_ok=True)
-            for img in images:
-                img.unlink(missing_ok=True)
-            logger.info("Uploaded & purged %s (+%d images)", csv_path.name, len(images))
+        else:
+            images = self.image_finder()
+            if images and self.sender(None, images):
+                #if self.sender(csv_path, images):
+                #csv_path.unlink(missing_ok=True)
+                for img in images:
+                    img.unlink(missing_ok=True)
+                logger.info("Uploaded & purged %s independant (+%d images)", len(images))
         
     
     

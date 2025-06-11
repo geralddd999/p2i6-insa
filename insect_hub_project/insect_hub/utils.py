@@ -11,7 +11,8 @@ def ensure_day_dirs(base: Path, day: str) -> Path:
     month_dir = base / year / month
     (month_dir / "csv").mkdir(parents=True, exist_ok=True)
     (month_dir / "img").mkdir(exist_ok=True)
-    return month_dir        # we now return the MONTH-level directory
+    (month_dir / "log").mkdir(exist_ok=True) 
+    return month_dir        # month level type directory
 
 
 def build_tree(data_dir: Path) -> list[dict]:

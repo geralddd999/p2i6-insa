@@ -31,7 +31,14 @@ CREATE TABLE IF NOT EXISTS errors (
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 """
-
+_SCHEMA += """
+CREATE TABLE IF NOT EXISTS logs (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    upload_id  INTEGER REFERENCES uploads(id) ON DELETE CASCADE,
+    file_path  TEXT NOT NULL,
+    created_at TEXT DEFAULT (datetime('now'))
+);
+"""
 def init_db() -> None:
     with sqlite3.connect(DB_PATH) as conn:
         conn.executescript(_SCHEMA)
@@ -64,3 +71,7 @@ def insert_health(conn: sqlite3.Connection, upload_id: int, payload: dict):
 
 def insert_error(conn: sqlite3.Connection, upload_id: int, payload: dict):
     conn.execute("INSERT INTO errors(upload_id, payload) VALUES(?, ?)", (upload_id, json.dumps(payload)))
+
+def insert_log(conn: sqlite3.Connection, upload_id: int, path: str):
+    conn.execute("INSERT INTO logs(upload_id, file_path) VALUES(?,?)",
+                 (upload_id, path))

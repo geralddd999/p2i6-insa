@@ -6,7 +6,7 @@ from fastapi.responses import StreamingResponse
 from pathlib import Path
 import shutil, aiofiles, datetime as _dt, json, typing as _t
 from .auth import verify_token
-from .database import init_db, get_db, insert_upload, insert_photo, insert_health, insert_error
+from .database import init_db, get_db, insert_upload, insert_photo, insert_health, insert_error, insert_log
 from .utils import ensure_day_dirs, stats_last_3_days, build_tree, monthly_recap, build_nested_tree
 import sqlite3
 from starlette.requests import Request
@@ -24,6 +24,7 @@ app.mount("/static", StaticFiles(directory=str(Path(__file__).parent / "static")
 async def upload(
     csv: UploadFile | None = File(None),
     images: list[UploadFile] = File(default=[]),
+    log: UploadFile | None = File(None),           
     health: str | None = Form(None),
     error: str | None = Form(None),
     db: sqlite3.Connection = Depends(get_db),
@@ -60,6 +61,14 @@ async def upload(
             pass
     if csv is None and not images:
         raise HTTPException(400, "upload must contain csv and/or images")
+    
+    if log is not None:
+        log_dst = day_dir / "log" / f"{day}_{log.filename}"
+        async with aiofiles.open(log_dst, "wb") as out:
+            while chunk := await log.read(1024 * 1024):
+                await out.write(chunk)
+        insert_log(db, upload_id, str(log_dst))       # ← helper we add below
+        await log.close()
 
     db.commit()
     return {"ack": True}
@@ -82,10 +91,30 @@ async def monthly(year_month: str):
 
 @app.get("/api/maintenance", dependencies=[Depends(verify_token)])
 async def maintenance(db: sqlite3.Connection = Depends(get_db)):
-    row = db.execute("SELECT payload, created_at FROM health ORDER BY id DESC LIMIT 1").fetchone()
-    if row:
-        return {"payload": json.loads(row[0]), "timestamp": row[1]}
-    return {"payload": {}, "timestamp": None}
+    # latest health JSON (kept for completeness)
+    health_row = db.execute(
+        "SELECT payload, created_at FROM health ORDER BY id DESC LIMIT 1"
+    ).fetchone()
+
+    # latest log file
+    log_row = db.execute(
+        "SELECT file_path, created_at FROM logs ORDER BY id DESC LIMIT 1"
+    ).fetchone()
+
+    log_text = ""
+    if log_row:
+        try:
+            with open(log_row["file_path"], "r", errors="ignore") as f:
+                log_text = f.read()[-20_000:]   # show last 20 KB
+        except FileNotFoundError:
+            pass
+
+    return {
+        "health": json.loads(health_row[0]) if health_row else {},
+        "health_time": health_row[1] if health_row else None,
+        "log_text": log_text,
+        "log_time": log_row["created_at"] if log_row else None,
+    }
 
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):
@@ -105,8 +134,30 @@ async def data_view(request: Request):
 
 @app.get("/maintenance", response_class=HTMLResponse)
 async def maintenance_view(request: Request, db: sqlite3.Connection = Depends(get_db)):
-    row = db.execute("SELECT payload, created_at FROM health ORDER BY id DESC LIMIT 1").fetchone()
-    return templates.TemplateResponse("maintenance.html", {"request": request, "health": row})
+    health_row = db.execute(
+        "SELECT payload, created_at FROM health ORDER BY id DESC LIMIT 1"
+    ).fetchone()
+
+    log_row = db.execute(
+        "SELECT file_path, created_at FROM logs ORDER BY id DESC LIMIT 1"
+    ).fetchone()
+
+    log_text = ""
+    if log_row:
+        try:
+            with open(log_row["file_path"], "r", errors="ignore") as f:
+                log_text = f.read()[-20_000:]
+        except FileNotFoundError:
+            pass
+
+    data = {
+        "health": json.loads(health_row[0]) if health_row else {},
+        "health_time": health_row[1] if health_row else None,
+        "log_text": log_text,
+        "log_time": log_row["created_at"] if log_row else None,
+    }
+    return templates.TemplateResponse("maintenance.html", {"request": request, "data": data})
+
 
 @app.get("/download/{day}", dependencies=[Depends(verify_token)])
 async def download_day(day: str):

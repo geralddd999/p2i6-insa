@@ -1,10 +1,19 @@
+<!-- templates/maintenance.html -->
 {% extends 'base.html' %}
 {% block content %}
 <h1>Maintenance</h1>
-{% if health %}
-  <p>Last update: {{ health[1] }}</p>
-  <pre>{{ health[0] }}</pre>
+
+<h2>Latest Pi log ({{ data.log_time or "n/a" }})</h2>
+{% if data.log_text %}
+<pre style="max-height:400px;overflow:auto;background:#111;color:#0f0;padding:1rem;">
+{{ data.log_text }}
+</pre>
 {% else %}
-  <p>No health data yet.</p>
+<p>No log uploaded yet.</p>
 {% endif %}
+
+<hr>
+
+<h2>Latest health ping ({{ data.health_time or "n/a" }})</h2>
+<pre>{{ data.health | tojson(indent=2) }}</pre>
 {% endblock %}
