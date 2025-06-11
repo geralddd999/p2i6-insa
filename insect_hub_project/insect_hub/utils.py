@@ -1,6 +1,10 @@
 from pathlib import Path
 import csv, datetime as _dt, statistics, json, typing as _t
 import pandas as pd
+from pandas.errors import EmptyDataError
+
+from collections import defaultdict
+from typing import Dict, List
 
 def ensure_day_dirs(base: Path, day: str) -> Path:
     """
@@ -67,39 +71,55 @@ def build_nested_tree(data_dir: Path) -> dict:
     return dict(sorted(tree.items()))
 
 def stats_last_3_days(data_dir: Path) -> dict:
-    """Aggregate insect count & numeric averages over the *last three calendar days*.
+    """Aggregate insect count & numeric averages over the last three calendar days.
 
-    Works with the **year/month** folder layout (data/2025/04/csv/…) *and* the
-    legacy flat layout (data/2025-04-28/csv/…) so you can mix old and new
-    uploads without losing stats.
+    Works with both folder layouts:
+        new  -> data/YYYY/MM/csv/…
+        old  -> data/YYYY-MM-DD/csv/…
     """
     today = _dt.date.today()
-    days = [(today - _dt.timedelta(days=i)).isoformat() for i in range(3)]
+    days  = [(today - _dt.timedelta(days=i)).isoformat() for i in range(3)]
 
-    numeric_cols: dict[str, list[float]] = {}
+    numeric_cols: Dict[str, List[float]] = defaultdict(list)
     insects_total = 0
 
     for d in days:
         year, month, _ = d.split("-")
 
-        # --- new layout: data/YYYY/MM/csv/
-        new_csv_dir = data_dir / year / month / "csv"
-        # --- old layout: data/YYYY-MM-DD/csv/
-        old_csv_dir = data_dir / d / "csv"
-
-        for csv_folder in (new_csv_dir, old_csv_dir):
+        for csv_folder in (
+            data_dir / year / month / "csv",  # new layout
+            data_dir / d / "csv",             # legacy layout
+        ):
             if not csv_folder.exists():
                 continue
-            for csv_file in csv_folder.glob("*.csv"):
-                df = pd.read_csv(csv_file, on_bad_lines='skip')
 
-                # Heuristic: first column that contains the word "insect"
+            for csv_file in csv_folder.glob("*.csv"):
+                # Skip zero-byte files outright
+                if csv_file.stat().st_size == 0:
+                    continue
+
+                try:
+                    df = pd.read_csv(
+                        csv_file,
+                        engine="python",       # tolerant of ragged rows
+                        on_bad_lines="skip",   # pandas ≥1.3
+                    )
+                except EmptyDataError:
+                    # File has no rows / only whitespace
+                    continue
+
+                # 1) insect count  (first column containing “insect”)
                 insect_cols = [c for c in df.columns if "insect" in c.lower()]
                 if insect_cols:
                     insects_total += int(df[insect_cols[0]].sum())
 
+                # 2) numeric averages
                 for col in df.select_dtypes(include=["number"]).columns:
-                    numeric_cols.setdefault(col, []).extend(df[col].dropna().tolist())
+                    numeric_cols[col].extend(df[col].dropna().tolist())
 
-    averages = {col: statistics.mean(vals) for col, vals in numeric_cols.items() if vals}
+    # Final averages
+    averages = {
+        col: statistics.mean(vals) for col, vals in numeric_cols.items() if vals
+    }
     return {"insects": insects_total, "averages": averages}
+
