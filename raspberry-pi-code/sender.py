@@ -18,7 +18,7 @@ def timestamp_from_name(path : Path) -> datetime:
     
 
 class Uploader(threading.Thread):
-    LOG_MIN_SIZE = 1024
+    LOG_MIN_SIZE = 0
     
     def __init__(self, stop_event: threading.Event):
         super().__init__(daemon = True)
@@ -118,7 +118,6 @@ class Uploader(threading.Thread):
         self.stop_event.wait(INITIAL_UPLOAD_WAIT_PERIOD)
         while not self.stop_event.is_set():
             try:
-                
                 self.upload_cycle()
             except Exception:
                 logger.exception("unexpected error in upload cycle, retrying")

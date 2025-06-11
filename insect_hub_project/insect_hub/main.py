@@ -12,10 +12,13 @@ import sqlite3
 from starlette.requests import Request
 import io, zipfile, os
 
+
+
 DATA_DIR = Path("data")
 init_db()
 
-app = FastAPI(title="Insect Hub")
+app = FastAPI(title="Insect Hub",
+              root_path=os.getenv("ROOT_PATH", "/allinone"))
 
 templates = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
 app.mount("/static", StaticFiles(directory=str(Path(__file__).parent / "static")), name="static")

@@ -1,7 +1,7 @@
 from fastapi import Header, HTTPException, status, Query
 import os
 
-API_TOKEN = os.getenv("API_TOKEN", "secret-token")
+API_TOKEN = os.getenv("API_TOKEN", "very-secret-and-difficult-token")
 
 async def verify_token(
     authorization: str | None = Header(None),

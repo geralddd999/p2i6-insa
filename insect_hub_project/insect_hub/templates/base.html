@@ -3,16 +3,22 @@
 <head>
     <meta charset="UTF-8" />
     <title>Insect Hub</title>
-    <link rel="stylesheet" href="/static/style.css" />
+
+    <!-- static file served by FastAPI -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', path='style.css') }}">
 </head>
 <body>
+
 <nav>
-    <a href="/">Dashboard</a> |
-    <a href="/data">Data</a> |
-    <a href="/maintenance">Maintenance</a>
+    <a href="{{ url_for('root') }}">Dashboard</a> |
+    <a href="{{ url_for('data_view') }}">Data</a> |
+    <a href="{{ url_for('maintenance_view') }}">Maintenance</a>
 </nav>
+
 <main>
     {% block content %}{% endblock %}
 </main>
+
 </body>
 </html>
