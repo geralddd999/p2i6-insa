@@ -20,7 +20,6 @@ class MotionDetector(threading.Thread):
         self.camera = None
         self.back_sub = cv2.createBackgroundSubtractorMOG2(history = 600, varThreshold=self.VAR_THRESHOLD, detectShadows=False)
         self.last_save = 0.0
-        self.openCamera()
 
     def openCamera(self):
         while not self.stop_event.is_set():
@@ -36,6 +35,7 @@ class MotionDetector(threading.Thread):
                 for _ in range(self.WARMUP):
                     self.back_sub.apply(self.camera.capture_array())
                 logger.info("Camera initialised")
+                
                 return
             except Exception as e:
                 logger.info("Camera start failed: %s - retrying in %d s",

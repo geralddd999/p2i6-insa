@@ -16,7 +16,6 @@ class SerialReader(threading.Thread):
         self.stop_event = stop_event
         self.ser = None
         logger.info("Started SerialReader Module")
-        self.serialOpen()
         
 
     def serialOpen(self):
@@ -40,7 +39,7 @@ class SerialReader(threading.Thread):
         while not self.stop_event.is_set():
             if self.ser is None:
                 self.serialOpen()
-                
+
             try:
                 line = self.ser.readline().decode(errors="ignore")
                 
