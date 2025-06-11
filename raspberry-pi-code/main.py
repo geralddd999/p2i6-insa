@@ -26,7 +26,7 @@ signal.signal(signal.SIGINT, graceful_shutdown)
 signal.signal(signal.SIGTERM, graceful_shutdown)
 
 threads = [
-    #SerialReader(stop_event),
+    SerialReader(stop_event),
     MotionDetector(stop_event),
     Uploader(stop_event)
 ]

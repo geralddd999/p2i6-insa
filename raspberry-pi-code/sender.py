@@ -118,6 +118,7 @@ class Uploader(threading.Thread):
         self.stop_event.wait(INITIAL_UPLOAD_WAIT_PERIOD)
         while not self.stop_event.is_set():
             try:
+                
                 self.upload_cycle()
             except Exception:
                 logger.exception("unexpected error in upload cycle, retrying")

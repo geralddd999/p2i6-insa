@@ -6,8 +6,8 @@ W_DIR = Path.cwd()
 AUTH_TOKEN = "very-secret-and-difficult-token"
 SERVER_URL = 'http://100.71.142.12:8000/api/upload'
 TCP_RETRY_DELAY = 15
-UPLOAD_INTERVAL = 600
-INITIAL_UPLOAD_WAIT_PERIOD = 300  # x min wait on boot
+UPLOAD_INTERVAL = 10
+INITIAL_UPLOAD_WAIT_PERIOD = 30  # x min wait on boot
 
 
 #Arduino configs

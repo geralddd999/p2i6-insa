@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 from config import IMG_DIR, FRAME_WIDTH, FRAME_HEIGHT, FPS, MOTION_MIN_AREA
 
 class MotionDetector(threading.Thread):
-    RECONNECT_DELAY = 10
+    RECONNECT_DELAY = 600
     WARMUP = 50 #let model settle and train the given background
     COOLDOWN = 1 #in seconds
     VAR_THRESHOLD = 44 #increase if false positive
