@@ -15,16 +15,21 @@
 <details open>
   <summary>
       {{ year }}
-      <!-- NEW: download all months in one zip -->
-      <a class="btn" href="/download/{{ year }}?token={{ token }}">zip</a>
+      <!-- YEAR-level zip -->
+      <a class="btn"
+         href="{{ url_for('download_path', path=year) }}?token={{ token }}">
+         zip
+      </a>
   </summary>
+
   {% for month, files in months.items() %}
     <details>
       <summary>
         {{ month }}
+        <!-- MONTH-level zip -->
         <a class="btn"
-         href="/download/{{ year }}/{{ month }}?token={{ token }}">
-         zip
+           href="{{ url_for('download_path', path=year ~ '/' ~ month) }}?token={{ token }}">
+           zip
         </a>
       </summary>
       <ul class="files">
