@@ -1,0 +1,21 @@
+[Unit]
+Description=Insect Detection Uploader
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+# --- adjust these two lines to where your code lives -----------------
+WorkingDirectory=/home/pi/insect_detection_rpi_project
+ExecStart=/usr/bin/python3 /home/pi/insect_detection_rpi_project/main.py
+# --------------------------------------------------------------------
+User=pi                     # or another non-root user
+Environment=PYTHONUNBUFFERED=1
+Restart=on-failure          # auto-restart on crash
+RestartSec=5
+# Optional: give the camera thread realtime priority
+# Nice=-10
+# IOSchedulingClass=best-effort
+# IOSchedulingPriority=0
+
+[Install]
+WantedBy=multi-user.target
