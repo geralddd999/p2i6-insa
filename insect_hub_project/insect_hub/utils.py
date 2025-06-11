@@ -14,25 +14,6 @@ def ensure_day_dirs(base: Path, day: str) -> Path:
     return month_dir        # we now return the MONTH-level directory
 
 
-def stats_last_3_days(data_dir: Path) -> dict:
-    today = _dt.date.today()
-    days = [(today - _dt.timedelta(days=i)).isoformat() for i in range(3)]
-    numeric_cols: dict[str, list[float]] = {}
-    insects_total = 0
-    for d in days:
-        csv_folder = data_dir / d / "csv"
-        if not csv_folder.exists():
-            continue
-        for csv_file in csv_folder.glob("*.csv"):
-            df = pd.read_csv(csv_file)
-            insect_cols = [c for c in df.columns if "insect" in c.lower()]
-            if insect_cols:
-                insects_total += int(df[insect_cols[0]].sum())
-            for col in df.select_dtypes(include=["number"]).columns:
-                numeric_cols.setdefault(col, []).extend(df[col].dropna().tolist())
-    averages = {col: statistics.mean(vals) for col, vals in numeric_cols.items() if vals}
-    return {"insects": insects_total, "averages": averages}
-
 def build_tree(data_dir: Path) -> list[dict]:
     tree = []
     for day in sorted(p.name for p in data_dir.iterdir() if p.is_dir()):
@@ -109,7 +90,7 @@ def stats_last_3_days(data_dir: Path) -> dict:
             if not csv_folder.exists():
                 continue
             for csv_file in csv_folder.glob("*.csv"):
-                df = pd.read_csv(csv_file)
+                df = pd.read_csv(csv_file, on_bad_lines='skip')
 
                 # Heuristic: first column that contains the word "insect"
                 insect_cols = [c for c in df.columns if "insect" in c.lower()]
