@@ -66,12 +66,17 @@ async def upload(
         raise HTTPException(400, "upload must contain csv and/or images or logs")
     
     if log is not None:
-        log_dst = day_dir / "log" / f"{day}_{log.filename}"
-        async with aiofiles.open(log_dst, "wb") as out:
+        # one log file per day  ->   data/YYYY/MM/log/2025-06-04.log
+        log_dst = day_dir / "log" / f"{day}.log"
+    
+        # append if it already exists, otherwise create
+        async with aiofiles.open(log_dst, "ab") as out:     # ← "a" for append
             while chunk := await log.read(1024 * 1024):
                 await out.write(chunk)
-        insert_log(db, upload_id, str(log_dst))       
         await log.close()
+    
+        # store the path once (OPTIONAL)
+        insert_log(db, upload_id, str(log_dst))
 
     db.commit()
     return {"ack": True}
