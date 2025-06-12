@@ -110,8 +110,9 @@ class Uploader(threading.Thread):
                 for img in images:
                     img.unlink(missing_ok=True)
                 logger.info("Uploaded & purged %s independant (+%d images)", len(images))
+            elif self.sender(None, []):
+                logger.info("Uploaded log only")
         
-    
     
     def run(self):
         

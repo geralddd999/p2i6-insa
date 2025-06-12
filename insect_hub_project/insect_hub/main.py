@@ -62,15 +62,15 @@ async def upload(
             insert_error(db, upload_id, json.loads(error))
         except json.JSONDecodeError:
             pass
-    if csv is None and not images:
-        raise HTTPException(400, "upload must contain csv and/or images")
+    if csv is None and not images and log is None:
+        raise HTTPException(400, "upload must contain csv and/or images or logs")
     
     if log is not None:
         log_dst = day_dir / "log" / f"{day}_{log.filename}"
         async with aiofiles.open(log_dst, "wb") as out:
             while chunk := await log.read(1024 * 1024):
                 await out.write(chunk)
-        insert_log(db, upload_id, str(log_dst))       # ← helper we add below
+        insert_log(db, upload_id, str(log_dst))       
         await log.close()
 
     db.commit()
@@ -149,7 +149,7 @@ async def maintenance_view(request: Request, db: sqlite3.Connection = Depends(ge
     if log_row:
         try:
             with open(log_row["file_path"], "r", errors="ignore") as f:
-                log_text = f.read()[-20_000:]
+                log_text = f.read()
         except FileNotFoundError:
             pass
 

@@ -3,9 +3,17 @@
 {% block content %}
 <h1>Maintenance</h1>
 
-<h2>Latest Pi log ({{ data.log_time or "n/a" }})</h2>
+<h2>Latest Pi log ({{ data.log_time or 'n/a' }})</h2>
 {% if data.log_text %}
-<pre style="max-height:400px;overflow:auto;background:#111;color:#0f0;padding:1rem;">
+<pre style="
+       max-height:80vh;    /* fill most of the viewport */
+       overflow:auto;      /* scroll when longer */
+       background:#111;
+       color:#0f0;
+       padding:1rem;
+       white-space:pre-wrap;
+       font-family:monospace;
+">
 {{ data.log_text }}
 </pre>
 {% else %}
@@ -14,6 +22,6 @@
 
 <hr>
 
-<h2>Latest health ping ({{ data.health_time or "n/a" }})</h2>
+<h2>Latest health ping ({{ data.health_time or 'n/a' }})</h2>
 <pre>{{ data.health | tojson(indent=2) }}</pre>
 {% endblock %}
