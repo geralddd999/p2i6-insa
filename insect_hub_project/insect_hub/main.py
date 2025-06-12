@@ -149,7 +149,7 @@ async def maintenance_view(request: Request, db: sqlite3.Connection = Depends(ge
     if log_row:
         try:
             with open(log_row["file_path"], "r", errors="ignore") as f:
-                log_text = f.read()
+                log_text = f.read().replace("\r\n", "\n").replace("\r", "\n")
         except FileNotFoundError:
             pass
 
