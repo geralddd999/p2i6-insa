@@ -3,6 +3,7 @@ import csv, logging, threading, serial, time
 from datetime import datetime, timezone
 from serial.serialutil import SerialException
 from pathlib import Path
+from zoneinfo import ZoneInfo
 #Import configuration
 
 from config import SERIAL_PORT, BAUD_RATE, DATA_DIR
@@ -10,7 +11,8 @@ from config import SERIAL_PORT, BAUD_RATE, DATA_DIR
 logger = logging.getLogger(__name__)
 
 class SerialReader(threading.Thread):
-    RECONNECT_DELAY = 5
+    PARIS = ZoneInfo("Europe/Paris") 
+    RECONNECT_DELAY = 600
     def __init__(self, stop_event: threading.Event):
         super().__init__(daemon = True)
         self.stop_event = stop_event
@@ -19,15 +21,14 @@ class SerialReader(threading.Thread):
         
 
     def serialOpen(self):
-        while not self.stop_event.is_set():
-            try:
+        try:
                 self.ser = serial.Serial(port =SERIAL_PORT, baudrate= BAUD_RATE, timeout=1)
                 logger.info("Communication serial etablie en %s @%d", SERIAL_PORT, BAUD_RATE)
-            except SerialException as e:
+
+        except SerialException as e:
                 logger.error("Serial communication errored out: %s - retrying in %d ", e, self.RECONNECT_DELAY)
                 self.ser = None
-                self.stop_event.wait(self.RECONNECT_DELAY)
-
+                
     @staticmethod
     def create_path_csv(timestamp : datetime) -> Path:
         """
@@ -39,23 +40,30 @@ class SerialReader(threading.Thread):
         while not self.stop_event.is_set():
             if self.ser is None:
                 self.serialOpen()
+                if self.ser is None:
+                        self.stop_event.wait(self.RECONNECT_DELAY)
+                        continue
 
             try:
-                line = self.ser.readline().decode(errors="ignore")
+
+                line = self.ser.readline().decode("ascii", errors="ignore").strip()
                 
                 if not line:
                     continue # if nothing aight
                 
-                timestamp = datetime.now(timezone.utc)
+                timestamp = datetime.now(self.PARIS)
                 csv_path = self.create_path_csv(timestamp)
                 new_file = not csv_path.exists()
                 
                 with csv_path.open("a", newline="") as file:
-                    writer = csv.writer(file)
+                    writer = csv.writer(file, delimiter =";")
                     if new_file:
-                        starting_line = ["Temperature [C]","Humidity", "Light", "Voltage L.Sensor"]
+                        starting_line = ["Temperature [C] ","Humidity ", "Light ", "Voltage L.Sensor "]
                         writer.writerow(["timestamp"] + starting_line)
-                    # just why?: logger.debug('Ligne serial ecrit:', line)
+
+                    writer.writerow([f"{timestamp}"] + line.split(';'))
+                    
+                    logger.info('Ligne serial ecrit')
 
             except SerialException as exc:
                 logger.exception("Echec lors de la lecture du serial arduino ")
@@ -63,5 +71,6 @@ class SerialReader(threading.Thread):
                 self.ser.close()
                 self.ser = None
                 self.stop_event.wait(self.RECONNECT_DELAY)
+        
         if self.ser:
             self.ser.close()

@@ -1,46 +1,9 @@
-2025-06-11 12:16:56,444 [INFO] sender: Uploaded and purged arduino_2025-05-27.csv (+4 images)
-2025-06-11 12:18:16,021 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:18:21,024 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:18:26,027 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:18:31,030 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:18:36,034 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:18:41,036 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:18:46,040 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:18:51,043 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:18:56,047 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:19:01,049 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:19:06,052 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:19:11,055 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:19:16,057 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:19:21,060 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:19:26,063 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:19:31,066 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:19:36,068 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:19:41,071 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:19:46,074 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:19:51,077 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:19:56,079 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:20:01,082 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:20:06,084 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:20:11,087 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:20:16,089 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:20:21,092 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:20:26,094 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:20:31,097 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:20:36,100 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:20:41,103 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:20:46,106 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:20:51,108 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:20:56,112 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:21:01,115 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:21:06,117 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:21:11,120 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:21:16,123 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:21:21,126 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:21:26,128 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:21:31,131 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:21:36,134 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:21:41,136 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:21:46,139 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:21:51,142 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 5 
-2025-06-11 12:21:54,128 [INFO] serialRead: Started SerialReader Module
+2025-06-12 16:43:12,544 [INFO] sender: Uploaded log only
+2025-06-12 16:43:38,032 [ERROR] camera_detect: Camera read failed - retrying in 600 s
+2025-06-12 16:43:50,228 [INFO] serialRead: Started SerialReader Module
+2025-06-12 16:43:50,236 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 600 
+2025-06-12 16:43:50,288 [INFO] camera_detect: Camera start failed: list index out of range - retrying in 600 s
+2025-06-12 16:45:19,325 [ERROR] camera_detect: Camera read failed - retrying in 600 s
+2025-06-12 16:45:31,779 [INFO] serialRead: Started SerialReader Module
+2025-06-12 16:45:31,783 [ERROR] serialRead: Serial communication errored out: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0' - retrying in 600 
+2025-06-12 16:45:31,837 [INFO] camera_detect: Camera start failed: list index out of range - retrying in 600 s

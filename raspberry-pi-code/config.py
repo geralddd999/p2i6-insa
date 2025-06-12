@@ -4,10 +4,10 @@ W_DIR = Path.cwd()
 
 #Server configs
 AUTH_TOKEN = "very-secret-and-difficult-token"
-SERVER_URL = 'http://100.71.142.12:8000/api/upload'
+SERVER_URL = 'http://insectes.citi.insa-lyon.fr/allinon/api/upload'
 TCP_RETRY_DELAY = 15
-UPLOAD_INTERVAL = 10
-INITIAL_UPLOAD_WAIT_PERIOD = 30  # x min wait on boot
+UPLOAD_INTERVAL = 300
+INITIAL_UPLOAD_WAIT_PERIOD = 300  # x min wait on boot
 
 
 #Arduino configs

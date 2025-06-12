@@ -37,11 +37,22 @@ async def upload(
 
     csv_path = ""
     if csv is not None:
-        csv_dst = day_dir / "csv" / csv.filename
-        async with aiofiles.open(csv_dst, "wb") as out:
-            while chunk := await csv.read(1024 * 1024):
-                await out.write(chunk)
-        csv_path = str(csv_dst)
+        day_csv = day_dir / "csv" / f"{day}.csv"
+        is_new  = not day_csv.exists()
+
+        # read entire incoming CSV into memory (usually < 50 kB)
+        raw_text = (await csv.read()).decode()
+
+        # drop the first line (header) if today's file already exists
+        if not is_new:
+            raw_text = "\n".join(raw_text.splitlines()[1:])
+
+        # append (or create) in binary mode
+        async with aiofiles.open(day_csv, "ab") as out:
+            await out.write(raw_text.encode())
+
+        csv_path = str(day_csv)
+        await csv.close() 
 
     upload_id = insert_upload(db, day, csv_path)
 
@@ -63,7 +74,7 @@ async def upload(
         except json.JSONDecodeError:
             pass
     if csv is None and not images and log is None:
-        raise HTTPException(400, "upload must contain csv and/or images or logs")
+        raise HTTPException(400, "upload must contain csv ,images or logs")
     
     if log is not None:
         # one log file per day  ->   data/YYYY/MM/log/2025-06-04.log

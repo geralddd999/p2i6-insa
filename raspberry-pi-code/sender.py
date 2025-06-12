@@ -112,7 +112,7 @@ class Uploader(threading.Thread):
                 logger.info("Uploaded & purged %s independant (+%d images)", len(images))
             elif self.sender(None, []):
                 logger.info("Uploaded log only")
-        
+    
     
     def run(self):
         
