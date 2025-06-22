@@ -2,17 +2,16 @@
 #include <Grove_I2C_Motor_Driver.h>
 #include <Encoder.h>
 #include <SensirionI2cSht4x.h>
-
-// ------------------- Motor & Encoder Setup -------------------
-Encoder myEnc(2, 3);                   // Encoder on pins 2 & 3
+Encoder myEnc(2, 3);  
 #define MOTOR_CHANNEL MOTOR2
 byte I2C_ADDRESS = 0x0f;
 
-// ------------------- PI Control Parameters -------------------
-float kp = 50;
-float ki = 0.5;
+float kp = 5.7;
+float ki = 0.1;
+float kd = 0.1;
 long consigne = 0;
-long degree_step = -5;
+long degree_step = -45;
+long derive = 0;
 unsigned long motor_interval = 10000;
 
 long lastMotorUpdate = 0;
@@ -20,13 +19,13 @@ long lastPrintTime = 0;
 long previoustime = 0;
 float accumulator = 0;
 long position = 0;
-long erreur = 0;
+long erreur = 2000;
 long commande = 0;
+long previous_error = 0;
 
 const int switchPin = 7;
 bool controlActive = false;
 
-// ------------------- SHT4x Sensor Setup -------------------
 #define NO_ERROR 0
 SensirionI2cSht4x sensor;
 char errorMessage[64];
@@ -36,21 +35,45 @@ uint32_t serialNumber = 0;
 unsigned long lastEnvUpdate = 0;
 unsigned long envInterval = 10000;
 
-// ------------------- Light Sensor Setup -------------------
-const int lightPin = A0;
+const int lightPin = A1;
 unsigned long lastLightUpdate = 0;
 unsigned long lightInterval = 10000;
+void go_to_zero() {
+  const float tolerance = 2.0; 
+  const float KP = 16;
+  long position = myEnc.read();
+  long error_counts = position;
+  // Serial.println("Moving to position 0...");
+  while (abs(error_counts) > tolerance) {
+    position = myEnc.read();
+    error_counts = 0 - position; 
+    long command = KP * error_counts;
+    command = constrain(command, -255, 255);
+    Motor.speed(MOTOR_CHANNEL, command);
+
+    // Serial.print("Position: ");
+    // Serial.print(position);
+    // Serial.print(" ; Error: ");
+    // Serial.println(error_counts);
+
+    delay(100);  
+  }
+
+  Motor.stop(MOTOR_CHANNEL);
+  // Serial.println("Reached position 0.");
+  delay(1000);
+  myEnc.write(0);
+}
+
 void setup() {
   Serial.begin(9600);
   while (!Serial) delay(10);
 
   Wire.begin();
-  pinMode(switchPin, INPUT_PULLUP);
+  pinMode(switchPin, INPUT);
 
   Motor.begin(I2C_ADDRESS);
   myEnc.write(0);
-
-  // Initialize sensor
   sensor.begin(Wire, SHT40_I2C_ADDR_44);
   sensor.softReset();
   delay(10);
@@ -60,34 +83,24 @@ void setup() {
     Serial.print("SHT4x Error: ");
     Serial.println(errorMessage);
   }
-
-  Serial.println("Motor is rotating... Press button to activate control + sensors");
-
-  // Start rotating motor (open loop)
-  Motor.speed(MOTOR_CHANNEL, -150); // Arbitrary speed
-
-  // Wait for button press (goes LOW)
+  
+  Motor.speed(MOTOR_CHANNEL, -255); 
   while (digitalRead(switchPin) == LOW) {
     delay(10);
+    // Serial.println("k");
   }
-
-  Serial.println("Button pressed. Starting control + sensors.");
-
-  // Stop open-loop motor, reset encoder
   Motor.stop(MOTOR_CHANNEL);
   delay(1000);
-  myEnc.write(0);
-
-  delay(200);  // Debounce delay
+  myEnc.write(60);
+  go_to_zero();
+  delay(200); 
   controlActive = true;
-  previoustime = millis(); // Initialize control loop timer
+  previoustime = millis(); 
 }
-  
+
 void loop() {
   unsigned long currentTime = millis();
-
   if (controlActive) {
-    // --- PI Motor Control ---
     float dt = (currentTime - previoustime) / 1000.0;
     previoustime = currentTime;
 
@@ -97,13 +110,21 @@ void loop() {
     accumulator += erreur * ki * dt;
     accumulator = constrain(accumulator, -255, 255);
 
-    commande = kp * erreur + accumulator;
+    derive = (error-previous_error)/dt;
+    // commande = kp * erreur + accumulator;
+    previous_error = error;
+    commande = kp * erreur + accumulator - kd * derive;
     commande = constrain(commande, -255, 255);
-    Serial.print("Time: "); Serial.print(currentTime);
-    Serial.print(" ms ; Position: "); Serial.print(position);
-    Serial.print(" ; Error: "); Serial.print(erreur);
-    Serial.print(" ; Command: "); Serial.print(commande);
-    Serial.print(" ; Consigne: "); Serial.println(consigne);
+    // Serial.print("Time: ");
+    // Serial.print(currentTime);
+    // Serial.print(" ms ; Position: ");
+    // Serial.print(position);
+    // Serial.print(" ; Error: ");
+    // Serial.print(erreur);
+    // Serial.print(" ; Command: ");
+    // Serial.print(commande);
+    // Serial.print(" ; Consigne: ");
+    // Serial.println(consigne);
     Motor.speed(MOTOR_CHANNEL, commande);
 
     if (currentTime - lastMotorUpdate >= motor_interval) {
@@ -111,7 +132,6 @@ void loop() {
       consigne += degree_step;
     }
 
-    // --- Temp & Humidity Sensor ---
     if (currentTime - lastEnvUpdate >= envInterval) {
       lastEnvUpdate = currentTime;
       float temperature = 0.0, humidity = 0.0;
@@ -128,7 +148,6 @@ void loop() {
       }
     }
 
-    // --- Light Sensor ---
     if (currentTime - lastLightUpdate >= lightInterval) {
       lastLightUpdate = currentTime;
       int lightReading = analogRead(lightPin);
@@ -137,6 +156,14 @@ void loop() {
       Serial.print(lightReading);
       Serial.print("; Voltage: ");
       Serial.println(voltage, 2);
+    }
+
+    if (digitalRead(switchPin) == HIGH) {
+      position = myEnc.read();
+      if (abs((position % 1080) - 1020) > 4) {
+        go_to_zero();
+        consigne = 0;
+      }
     }
   }
 }

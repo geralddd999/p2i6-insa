@@ -1,1 +1,2 @@
-
+Le code total_program.ino est la version finale du code qui est implémenté dans l'arduino, les trois autres sont la version de test qui est séparée.
+Afin de m'assurer que le programme fonctionne, je laisse le moteur tourner toutes les 10 secondes et j'envoie la lecture de la température et de la lumière toutes les 10 secondes. vous pouvez l'ajuster en fonction de votre demande actuelle.

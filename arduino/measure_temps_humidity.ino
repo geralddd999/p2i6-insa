@@ -39,7 +39,7 @@ void setup() {
 void loop() {
   float temperature = 0.0;
   float humidity = 0.0;
-  delay(timelapse);  //time for delay in ms?
+  delay(timelapse);
   error = sensor.measureLowestPrecision(temperature, humidity);
   if (error != NO_ERROR) {
     Serial.print("Error trying to execute measureLowestPrecision(): ");
@@ -47,7 +47,5 @@ void loop() {
     Serial.println(errorMessage);
     return;
   }
-
   Serial.println(temperature + "," + humidity);
-  //Serial.println();
 }
